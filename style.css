@@ -54,11 +54,15 @@ h2{margin:0 0 12px;font-size:1.1rem}
 .answer:disabled{cursor:default}
 .answer.correct{background:var(--ok-bg);border-color:var(--ok);color:#14532d;font-weight:600}
 .answer.wrong{background:var(--bad-bg);border-color:var(--bad);color:#7f1d1d;font-weight:600}
+.answer.correct::after,.answer.wrong::after{float:inline-end;font-weight:800}
+.answer.correct::after{content:"✓"}
+.answer.wrong::after{content:"✗"}
 .answer.dim{opacity:.6}
 .explanation{margin-top:16px;padding:14px;border-radius:12px;background:#f4f5ff;border-inline-start:4px solid var(--brand);
   animation:fade .25s}
 .explanation strong{display:block;margin-bottom:4px}
 #next-btn{margin-top:16px}
+button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .score-ring{--p:0;width:140px;height:140px;border-radius:50%;margin:14px auto;display:grid;place-items:center;
   background:conic-gradient(var(--brand) calc(var(--p)*1%),var(--line) 0)}

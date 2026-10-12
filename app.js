@@ -9,8 +9,6 @@ let session = null;
 let deck = [];
 let idx = 0;
 let locked = false;
-let tally = {};
-let totalCorrect = 0;
 
 function show(name) {
   for (const [k, el] of Object.entries(screens)) el.hidden = k !== name;
@@ -57,9 +55,15 @@ function startQuiz() {
   }
   session = createSession(deck);
   idx = 0;
-  totalCorrect = 0;
-  tally = {};
   renderQuestion();
+}
+
+function setProgress(done) {
+  const pct = Math.round((done / deck.length) * 100);
+  $('bar-fill').style.width = `${pct}%`;
+  const bar = $('bar-fill').parentElement;
+  bar.setAttribute('aria-valuenow', pct);
+  bar.setAttribute('aria-label', `שאלה ${idx + 1} מתוך ${deck.length}`);
 }
 
 function renderQuestion() {
@@ -67,7 +71,7 @@ function renderQuestion() {
   locked = false;
   $('progress-text').textContent = `שאלה ${idx + 1} מתוך ${deck.length}`;
   $('category-tag').textContent = q.category;
-  $('bar-fill').style.width = `${(idx / deck.length) * 100}%`;
+  setProgress(idx);
   $('question-text').textContent = q.question;
   $('explanation').hidden = true;
   $('next-btn').hidden = true;
@@ -90,9 +94,6 @@ function pick(i) {
   const res = session.answer(i);
   const correctIdx = res && Number.isInteger(res.correctIdx) ? res.correctIdx : q.answers.findIndex((a) => a.isCorrect);
   const correct = res ? !!res.correct : i === correctIdx;
-  const t = (tally[q.category] ||= { correct: 0, total: 0 });
-  t.total++;
-  if (correct) { t.correct++; totalCorrect++; }
   [...$('answers').children].forEach((b, j) => {
     b.disabled = true;
     if (j === correctIdx) b.classList.add('correct');
@@ -100,11 +101,10 @@ function pick(i) {
     else b.classList.add('dim');
   });
   const ex = $('explanation');
-  if (q.explanation && q.explanation.trim()) {
-    ex.replaceChildren(el('strong', '', correct ? 'נכון! 🎉' : 'לא מדויק'), el('span', '', q.explanation));
-    ex.hidden = false;
-  }
-  $('bar-fill').style.width = `${((idx + 1) / deck.length) * 100}%`;
+  ex.replaceChildren(el('strong', '', correct ? 'נכון! 🎉' : 'לא מדויק'));
+  if (q.explanation && q.explanation.trim()) ex.append(el('span', '', q.explanation));
+  ex.hidden = false;
+  setProgress(idx + 1);
   $('next-btn').hidden = false;
   $('next-btn').focus({ preventScroll: true });
 }
@@ -120,6 +120,8 @@ function next() {
 
 function renderEnd() {
   const total = deck.length;
+  const totalCorrect = session.score;
+  const perCategory = session.perCategory;
   const pct = Math.round((totalCorrect / total) * 100);
   $('score-pct').textContent = `${pct}%`;
   $('score-ring').style.setProperty('--p', pct);
@@ -127,8 +129,8 @@ function renderEnd() {
   const body = $('stats-body');
   body.replaceChildren();
   for (const cat of CATEGORIES) {
-    const s = tally[cat];
-    if (!s) continue;
+    const s = perCategory[cat];
+    if (!s || !s.total) continue;
     const tr = el('tr');
     tr.append(el('td', '', cat), el('td', '', `${s.correct}/${s.total}`), el('td', '', `${Math.round((s.correct / s.total) * 100)}%`));
     body.append(tr);

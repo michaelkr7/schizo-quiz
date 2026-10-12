@@ -26,8 +26,34 @@ test('categories match the specification, including empty categories', () => {
   ]);
   assert.deepEqual(categoryCounts([]), Object.fromEntries(CATEGORIES.map((cat) => [cat, 0])));
   const counts = categoryCounts(questions);
-  assert.equal(counts[CATEGORIES[0]], 5);
-  assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), questions.length);
+  const expectedCounts = Object.fromEntries(CATEGORIES.map((cat) =>
+    [cat, questions.filter((q) => q.category === cat).length]));
+  assert.deepEqual(counts, expectedCounts);
+  assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), 70);
+});
+
+test('question bank has 70 unique sequential ids and valid options and categories', () => {
+  assert.equal(questions.length, 70);
+  assert.equal(new Set(questions.map((q) => q.id)).size, 70);
+  assert.deepEqual(questions.map((q) => q.id).sort((a, b) => a - b),
+    Array.from({ length: 70 }, (_, i) => i + 1));
+  for (const q of questions) {
+    assert.ok(Array.isArray(q.options), `Question ${q.id} options`);
+    assert.equal(q.options.length, 4, `Question ${q.id} option count`);
+    assert.ok(Number.isInteger(q.correctIndex) && q.correctIndex >= 0 && q.correctIndex < 4,
+      `Question ${q.id} correctIndex`);
+    assert.ok(CATEGORIES.includes(q.category), `Question ${q.id} category`);
+  }
+});
+
+test('prepareQuestion prefers options and falls back to legacy answers', () => {
+  const q = prepareQuestion({ ...fixture, options: ['W', 'X', 'Y', 'Z'] }, () => 0);
+  assert.equal(q.answers.find((a) => a.isCorrect).text, 'X');
+  assert.deepEqual(q.answers.map((a) => a.text).sort(), ['W', 'X', 'Y', 'Z']);
+  for (const options of [undefined, null]) {
+    const legacy = prepareQuestion({ ...fixture, options }, () => 0);
+    assert.equal(legacy.answers.find((a) => a.isCorrect).text, 'B');
+  }
 });
 
 test('shuffle copies the input and uses Fisher-Yates swaps', () => {

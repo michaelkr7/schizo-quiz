@@ -7,3 +7,7 @@
 - Tests: node --test test/ gives 7 pass, 0 fail.
 - Screenshots: Playwright Chromium headless saved to screens/.
 - Deploy: GitHub michaelkr7/schizo-quiz -> Vercel project schizo-quiz (Git-linked), SSO protection disabled.
+## v2 (70 questions)
+- questions.json replaced byte-for-byte with questions-full.json. Validated: 70 items, ids 1-70, 4 options each, correctIndex valid, all categories among the 10.
+- Codex: quiz.js reads options ?? answers. Tests now validate the full dataset instead of the hardcoded 5. 9/9 pass.
+- Claude Code: verdict line shown even with an empty explanation, ✓/✗ marks, role=status, aria-valuenow/aria-label on the progressbar, scoring taken only from session data, :focus-visible. Also reviewed the Codex diff.

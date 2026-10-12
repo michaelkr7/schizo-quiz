@@ -37,11 +37,11 @@
       <span id="progress-text" class="progress-text"></span>
       <span id="category-tag" class="tag"></span>
     </div>
-    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div id="bar-fill"></div></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="התקדמות"><div id="bar-fill"></div></div>
     <div class="card">
       <h2 id="question-text" class="question"></h2>
       <div id="answers" class="answers"></div>
-      <div id="explanation" class="explanation" hidden></div>
+      <div id="explanation" class="explanation" role="status" aria-live="polite" hidden></div>
       <button type="button" class="btn primary" id="next-btn" hidden>הבא</button>
     </div>
   </section>
