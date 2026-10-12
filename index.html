@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4338ca">
+<title>זהה את הסכיזופרן</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <section id="screen-start" class="screen" hidden>
+    <header class="hero">
+      <div class="logo" aria-hidden="true">🧠</div>
+      <h1>זהה את הסכיזופרן</h1>
+      <p class="sub">חידון ללימוד סימפטומים, מהלך ואבחנה מבדלת</p>
+    </header>
+    <div class="card">
+      <h2>קטגוריות</h2>
+      <div class="cat-actions">
+        <button type="button" class="link" id="cat-all">בחר הכול</button>
+        <button type="button" class="link" id="cat-none">נקה</button>
+      </div>
+      <div id="cat-list" class="cat-list"></div>
+      <label class="toggle">
+        <input type="checkbox" id="shuffle-order" checked>
+        <span class="switch" aria-hidden="true"></span>
+        <span>ערבוב סדר השאלות</span>
+      </label>
+      <p id="start-msg" class="msg" role="status"></p>
+      <button type="button" class="btn primary" id="start-btn">התחל</button>
+    </div>
+  </section>
+
+  <section id="screen-question" class="screen" hidden>
+    <div class="topbar">
+      <span id="progress-text" class="progress-text"></span>
+      <span id="category-tag" class="tag"></span>
+    </div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div id="bar-fill"></div></div>
+    <div class="card">
+      <h2 id="question-text" class="question"></h2>
+      <div id="answers" class="answers"></div>
+      <div id="explanation" class="explanation" hidden></div>
+      <button type="button" class="btn primary" id="next-btn" hidden>הבא</button>
+    </div>
+  </section>
+
+  <section id="screen-end" class="screen" hidden>
+    <header class="hero">
+      <h1>סיום החידון</h1>
+      <div class="score-ring" id="score-ring"><span id="score-pct"></span></div>
+      <p id="score-text" class="score-text"></p>
+    </header>
+    <div class="card">
+      <h2>לפי קטגוריה</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>קטגוריה</th><th>נכון</th><th>אחוז</th></tr></thead>
+          <tbody id="stats-body"></tbody>
+        </table>
+      </div>
+      <button type="button" class="btn primary" id="restart-btn">התחל מחדש</button>
+    </div>
+  </section>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
