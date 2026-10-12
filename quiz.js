@@ -18,7 +18,7 @@ export function prepareQuestion(q, rng = Math.random) {
     category: q.category,
     question: q.question,
     explanation: q.explanation,
-    answers: shuffle((q.options ?? q.answers).map((text, i) => ({
+    answers: shuffle(q.options.map((text, i) => ({
       text,
       isCorrect: i === q.correctIndex,
     })), rng),

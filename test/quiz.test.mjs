@@ -9,7 +9,7 @@ const { CATEGORIES, shuffle, prepareQuestion, buildDeck, categoryCounts, createS
 const questions = JSON.parse(await readFile(new URL('../questions.json', import.meta.url), 'utf8'));
 const fixture = {
   id: 'sample', category: CATEGORIES[0], question: 'Question?', explanation: 'Because.',
-  answers: ['A', 'B', 'C', 'D'], correctIndex: 1,
+  options: ['A', 'B', 'C', 'D'], correctIndex: 1,
 };
 
 function seededRng(seed = 123456789) {
@@ -46,14 +46,12 @@ test('question bank has 70 unique sequential ids and valid options and categorie
   }
 });
 
-test('prepareQuestion prefers options and falls back to legacy answers', () => {
+test('prepareQuestion reads options only', () => {
   const q = prepareQuestion({ ...fixture, options: ['W', 'X', 'Y', 'Z'] }, () => 0);
   assert.equal(q.answers.find((a) => a.isCorrect).text, 'X');
   assert.deepEqual(q.answers.map((a) => a.text).sort(), ['W', 'X', 'Y', 'Z']);
-  for (const options of [undefined, null]) {
-    const legacy = prepareQuestion({ ...fixture, options }, () => 0);
-    assert.equal(legacy.answers.find((a) => a.isCorrect).text, 'B');
-  }
+  const { options, ...noOptions } = fixture;
+  assert.throws(() => prepareQuestion({ ...noOptions, answers: ['A', 'B', 'C', 'D'] }, () => 0));
 });
 
 test('shuffle copies the input and uses Fisher-Yates swaps', () => {
@@ -84,7 +82,7 @@ test('prepared answer positions are uniform over 4000 runs and preserve answers'
 });
 
 test('correctness follows the source answer identity even with duplicate text', () => {
-  const q = prepareQuestion({ ...fixture, answers: ['same', 'same', 'same', 'same'] }, () => 0);
+  const q = prepareQuestion({ ...fixture, options: ['same', 'same', 'same', 'same'] }, () => 0);
   assert.equal(q.answers.filter((a) => a.isCorrect).length, 1);
   assert.equal(q.answers[0].isCorrect, true);
 });
