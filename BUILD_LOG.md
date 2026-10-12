@@ -6,3 +6,4 @@
 - Claude Code: fixed both app.js bugs and reviewed quiz.js/tests. Findings (not applied): no per-question validation, duplicated scoring, answer() throws while UI is locked, hardcoded count of 5 in a test.
 - Tests: node --test test/ gives 7 pass, 0 fail.
 - Screenshots: Playwright Chromium headless saved to screens/.
+- Deploy: GitHub michaelkr7/schizo-quiz -> Vercel project schizo-quiz (Git-linked), SSO protection disabled.
