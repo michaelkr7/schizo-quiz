@@ -70,9 +70,9 @@ test('prepared answer positions are uniform over 4000 runs and preserve answers'
   for (let run = 0; run < 4000; run++) {
     const q = prepareQuestion(fixture, rng);
     assert.equal(q.answers.filter((a) => a.isCorrect).length, 1);
-    assert.deepEqual(q.answers.map((a) => a.text).sort(), [...fixture.answers].sort());
+    assert.deepEqual(q.answers.map((a) => a.text).sort(), [...fixture.options].sort());
     const idx = q.answers.findIndex((a) => a.isCorrect);
-    assert.equal(q.answers[idx].text, fixture.answers[fixture.correctIndex]);
+    assert.equal(q.answers[idx].text, fixture.options[fixture.correctIndex]);
     positions[idx]++;
     assert.deepEqual([q.id, q.category, q.question, q.explanation],
       [fixture.id, fixture.category, fixture.question, fixture.explanation]);
